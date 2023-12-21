@@ -183,8 +183,31 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 
 
 		//TODO see if we should level up
-		if(Props.SourceCharacter->Implements<UPlayerInterface>())
+		if(Props.SourceCharacter->Implements<UPlayerInterface>() && Props.SourceCharacter->Implements<UCombatInterface>())
 		{
+			const int32 CurrentLevel = ICombatInterface::Execute_GetPlayerLevel(Props.SourceCharacter);
+			const int32 CurrentXP = IPlayerInterface::Execute_GetXP(Props.SourceCharacter);
+
+			const int32 NewLevel = IPlayerInterface::Execute_FindLevelForXP(Props.SourceCharacter, CurrentXP + LocalIncomingXP);
+			const int32 NumLevelUps = NewLevel - CurrentLevel;
+			if(NumLevelUps > 0)
+			{
+				// Get AttributePointsReward and SpellPointsReward
+
+				const int32 AttributePointsReward = IPlayerInterface::Execute_GetAttributePointsReward(Props.SourceCharacter, CurrentLevel);
+				const int32 SpellPointsReward = IPlayerInterface::Execute_GetSpellPointsReward(Props.SourceCharacter, CurrentLevel);
+
+				IPlayerInterface::Execute_AddToPlayerLevel(Props.SourceCharacter, NumLevelUps);
+
+				IPlayerInterface::Execute_AddToAttributePoints(Props.SourceCharacter, AttributePointsReward);
+				IPlayerInterface::Execute_AddToAttributePoints(Props.SourceCharacter, SpellPointsReward);
+
+				SetHealth(GetMaxHealth());
+				SetMana(GetMaxMana());
+				
+				IPlayerInterface::Execute_LevelUp(Props.SourceCharacter);
+			}
+			
 			IPlayerInterface::Execute_AddToXP(Props.SourceCharacter, LocalIncomingXP);	
 		}
 	}
@@ -208,9 +231,9 @@ void UAuraAttributeSet::ShowFloatingText(const FEffectProperties& Props, float D
 
 void UAuraAttributeSet::SendXPEvent(const FEffectProperties& Props)
 {
-	if(ICombatInterface* CombatInterface = Cast<ICombatInterface>(Props.TargetCharacter))
+	if(Props.TargetCharacter->Implements<UCombatInterface>())
 	{
-		const int32 TargetLevel = CombatInterface->GetPlayerLevel();
+		const int32 TargetLevel = ICombatInterface::Execute_GetPlayerLevel(Props.TargetCharacter);
 		const ECharacterClass TargetClass = ICombatInterface::Execute_GetCharacterClass(Props.TargetCharacter);
 		const int32 XPReward = UAuraAbilitySystemLibrary::GetXPRewardForClassAndLevel(this, TargetClass, TargetLevel);
 
