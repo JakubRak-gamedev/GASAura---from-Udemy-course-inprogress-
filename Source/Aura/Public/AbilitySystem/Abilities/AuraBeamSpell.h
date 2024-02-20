@@ -21,7 +21,9 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	void StoreMouseDataInfo(const FHitResult& HitResult);
-	
+
+	UFUNCTION(BlueprintCallable)
+	void TraceFirstTarget(const FVector& BeamTargetLocation);
 protected:
 
 	UPROPERTY(BlueprintReadWrite, Category="Beam")
