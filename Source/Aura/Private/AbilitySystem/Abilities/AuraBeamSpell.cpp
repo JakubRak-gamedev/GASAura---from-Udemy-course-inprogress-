@@ -83,6 +83,6 @@ void UAuraBeamSpell::StoreAdditionalTargets(TArray<AActor*>& OutAdditionalTarget
 	//int32 NumAdditionalTargets =FMath::Min(GetAbilityLevel() - 1, MaxNumShockTargets);
 	int32 NumAdditionalTargets = 10;
 
-	UAuraAbilitySystemLibrary::GetClosestTargets(NumAdditionalTargets, OverlapingActors, OutAdditionalTargets, MouseHitActor->GetActorLocation());
+	UAuraAbilitySystemLibrary::GetClosestTargets(MaxNumShockTargets, OverlapingActors, OutAdditionalTargets, MouseHitActor->GetActorLocation());
 }
 
