@@ -15,6 +15,7 @@
 #include "Interaction/EnemyInterface.h"
 #include "GameFramework/Character.h"
 #include "UI/Widget/DamageTextComponent.h"
+#include "Actor/MagicCircle.h"
 
 AAuraPlayerController::AAuraPlayerController()
 {
@@ -27,6 +28,7 @@ void AAuraPlayerController::PlayerTick(float DeltaTime)
 	Super::PlayerTick(DeltaTime);
 	CursorTrace();
 	AutoRun();
+	UpdateMagicCircleLocation();
 }
 
 void AAuraPlayerController::ShowDamageNumber_Implementation(float DamageAmount, ACharacter* TargetCharacter, bool bBlockedHit, bool bCriticalHit)
@@ -55,6 +57,14 @@ void AAuraPlayerController::AutoRun()
 		{
 			bAutoRunning = false;
 		}
+	}
+}
+
+void AAuraPlayerController::UpdateMagicCircleLocation()
+{
+	if (IsValid(MagicCircleClass))
+	{
+		MagicCircle->SetActorLocation(CursorHit.ImpactPoint);
 	}
 }
 
@@ -175,6 +185,22 @@ UAuraAbilitySystemComponent* AAuraPlayerController::GetASC()
 		AuraAbilitySystemComponent = Cast<UAuraAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetPawn<APawn>()));
 	}
 	return AuraAbilitySystemComponent;
+}
+
+void AAuraPlayerController::ShowMagicCircle()
+{
+	if (!IsValid(MagicCircle))
+	{
+		MagicCircle = GetWorld()->SpawnActor<AMagicCircle>(MagicCircleClass);
+	}
+}
+
+void AAuraPlayerController::HideMagicCircle()
+{
+	if (IsValid(MagicCircle))
+	{
+		MagicCircle->Destroy();
+	}
 }
 
 void AAuraPlayerController::BeginPlay()
