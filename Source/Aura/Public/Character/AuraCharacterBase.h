@@ -27,6 +27,9 @@ public:
 	AAuraCharacterBase();
 	virtual void Tick(float DeltaTime);
 	virtual void GetLifetimeReplicatedProps(TArray <FLifetimeProperty>& OutLifetimeProps) const;
+
+	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 
@@ -42,14 +45,15 @@ public:
 	virtual int32 GetMinionCount_Implementation() override;
 	virtual void IncrementMinionCount_Implementation(int32 Amount) override;
 	virtual ECharacterClass GetCharacterClass_Implementation() override;
-
 	virtual FOnASCRegistered& GetOnAscRegisteredDelegate() override;
 	virtual FOnDeath& GetOnDeathDelegate() override;
 	virtual USkeletalMeshComponent* GetWeapon_Implementation() override;
+	virtual FOnDamageSignature& GetOnDamageSignature() override;
 	/** end Combat Interface */
 
 	FOnASCRegistered OnAscRegistered;
 	FOnDeath OnDeath;
+	FOnDamageSignature OnDamageDelegate;
 	
 	UFUNCTION(NetMulticast, Reliable)
 	virtual void MulticastHandleDeath(const FVector& DeathImpulse);

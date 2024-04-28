@@ -15,7 +15,7 @@ void UAuraDamageGameplayAbility::CauseDamage(AActor* TargetActor)
 	GetAbilitySystemComponentFromActorInfo()->ApplyGameplayEffectSpecToTarget(*DamageSpecHandle.Data.Get(), UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor));
 }
 
-FDamageEffectParams UAuraDamageGameplayAbility::MakeDamageEffectParamsFromClassDefaults(AActor* TargetActor) const
+FDamageEffectParams UAuraDamageGameplayAbility::MakeDamageEffectParamsFromClassDefaults(AActor* TargetActor,FVector InRadialDamageOrigin) const
 {
 	FDamageEffectParams Params;
 	
@@ -34,6 +34,14 @@ FDamageEffectParams UAuraDamageGameplayAbility::MakeDamageEffectParamsFromClassD
 	Params.KnockbackForceMagnitude = KnockbackForceMagnitude;
 	Params.KnockbackChance = KnockbackChance;
 
+	if (bIsRadialDamage) // this should be just bIsRadialDamage
+	{
+		Params.bIsRadialDamage = bIsRadialDamage;
+		Params.RadialDamageOrigin = InRadialDamageOrigin;
+		Params.RadialDamageInnerRadius = RadialDamageInnerRadius;
+		Params.RadialDamageOuterRadius = RadialDamageOuterRadius;
+	}
+
 	if (IsValid(TargetActor))
 	{
 		FRotator Rotation = (TargetActor->GetActorLocation() - GetAvatarActorFromActorInfo()->GetActorLocation()).Rotation();
@@ -41,12 +49,13 @@ FDamageEffectParams UAuraDamageGameplayAbility::MakeDamageEffectParamsFromClassD
 		const FVector ToTarget = Rotation.Vector();
 		Params.DeathImpulse = ToTarget * DeathImpulseMagnitude;
  
-		const bool bKnockback = FMath::RandRange(1, 100) < Params.KnockbackChance;
+		const bool bKnockback = FMath::RandRange(1, 100) <= Params.KnockbackChance;
 		if (bKnockback)
 		{
 			Params.KnockbackForce = ToTarget * KnockbackForceMagnitude;        
 		}
 	}
+	
  
 	
 	return Params;

@@ -9,11 +9,14 @@
 #include "CombatInterface.generated.h"
 
 class UAbilitySystemComponent;
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnASCRegistered, UAbilitySystemComponent*);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDeath, AActor*, DeadActor);
-	
 class UNiagaraSystem;
 class UAnimMontage;
+
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnASCRegistered, UAbilitySystemComponent*);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDeath, AActor*, DeadActor);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnDamageSignature, float /*DamageAmount*/);
+	
+
 
 USTRUCT(BlueprintType)
 struct FTaggedMontage
@@ -64,6 +67,7 @@ public:
 
 	virtual void Die(const FVector& DeathImpulse) = 0;
 	virtual FOnDeath& GetOnDeathDelegate() = 0;
+	virtual FOnDamageSignature& GetOnDamageSignature() = 0;
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	bool IsDead() const;
