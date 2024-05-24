@@ -14,6 +14,7 @@
 #include "Interaction/CombatInterface.h"
 #include "Interaction/PlayerInterface.h"
 #include "Kismet/GameplayStatics.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Player/AuraPlayerController.h"
 
 UAuraAttributeSet::UAuraAttributeSet()
@@ -159,6 +160,7 @@ void UAuraAttributeSet::HandleIncomingDamage(const FEffectProperties& Props)
 			const FVector KnockbackForce = UAuraAbilitySystemLibrary::GetKnockbackForce(Props.EffectContextHandle);
 			if(!KnockbackForce.IsNearlyZero(1.f))
 			{
+				Props.TargetCharacter->GetCharacterMovement()->StopMovementImmediately();
 				Props.TargetCharacter->LaunchCharacter(KnockbackForce, true, true);
 			}
 		}
