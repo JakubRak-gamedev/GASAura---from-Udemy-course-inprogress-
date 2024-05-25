@@ -1,4 +1,4 @@
-// Copyright Druid Mechanics
+// Jakub Rak
 
 #include "Aura.h"
 #include "Modules/ModuleManager.h"

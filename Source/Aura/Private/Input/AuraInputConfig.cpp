@@ -1,4 +1,4 @@
-// Copyright Druid Mechanics
+// Jakub Rak
 
 
 #include "Input/AuraInputConfig.h"

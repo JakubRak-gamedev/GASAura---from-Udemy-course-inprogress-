@@ -1,4 +1,4 @@
-// Copyright Druid Mechanics
+// Jakub Rak
 
 
 #include "Actor/AuraProjectile.h"

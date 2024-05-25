@@ -1,4 +1,4 @@
-// Copyright Druid Mechanics
+// Jakub Rak
 
 
 #include "Character/AuraCharacterBase.h"

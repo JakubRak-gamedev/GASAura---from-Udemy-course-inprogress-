@@ -1,4 +1,4 @@
-// Copyright Druid Mechanics
+// Jakub Rak
 
 
 #include "AbilitySystem/Data/LevelUpInfo.h"
