@@ -16,7 +16,7 @@ FString UArcaneShards::GetDescription(int32 Level)
 			"<Default>Level: %d</>\n"
 			"<Default>ManaCost: </><ManaCost>%.1f</>\n"
 			"<Default>Cooldown: </><Cooldown>%.1f</>\n\n"
-			"<Default>Spawns %d crystals empowered by arcane magic dealing: "
+			"<Default>Spawns %d Crystals empowered by arcane magic dealing: "
 			"</><Damage>%d</><Default> arcane damage</>\n\n"), Level, ManaCost, Cooldown, FMath::Min(Level, MaxNumShards), ScaledDamage);
 	}
 	return FString::Printf(TEXT(

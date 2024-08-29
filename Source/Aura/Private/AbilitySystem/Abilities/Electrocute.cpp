@@ -16,7 +16,7 @@ FString UElectrocute::GetDescription(int32 Level)
 			"<Default>Level: %d</>\n"
 			"<Default>ManaCost: </><ManaCost>%.1f</>\n"
 			"<Default>Cooldown: </><Cooldown>%.1f</>\n\n"
-			"<Default>Emits %d beams of lightning that deal: "
+			"<Default>Emits %d beams of Lightning that deal: "
 			"</><Damage>%d</><Default> lightning damage with chance to stun</>\n\n"), Level, ManaCost, Cooldown,Level, ScaledDamage);
 	}
 	return FString::Printf(TEXT(
