@@ -3,6 +3,9 @@
 
 #include "AbilitySystem/Abilities/AuraFireBlast.h"
 
+#include "AbilitySystem/AuraAbilitySystemLibrary.h"
+#include "Actor/AuraFireBall.h"
+
 
 FString UAuraFireBlast::GetDescription(int32 Level)
 {
@@ -29,7 +32,7 @@ FString UAuraFireBlast::GetDescription(int32 Level)
 		"<Default>exploding upon return, causing </>"
 
 		//damage type
-		"</><Damage>%d</><Default> fire damage with chance to burn</>\n\n"),NumFireBalls, ManaCost, Cooldown, Level, ScaledDamage);
+		"</><Damage>%d</><Default> fire damage with chance to burn</>\n\n"),Level, ManaCost, Cooldown, NumFireBalls, ScaledDamage);
 }
 
 FString UAuraFireBlast::GetNextLevel(int32 Level)
@@ -57,5 +60,36 @@ FString UAuraFireBlast::GetNextLevel(int32 Level)
 		"<Default>exploding upon return, causing </>"
 
 		//damage type
-		"</><Damage>%d</><Default> fire damage with chance to burn</>\n\n"),NumFireBalls, ManaCost, Cooldown, Level, ScaledDamage);
+		"</><Damage>%d</><Default> fire damage with chance to burn</>\n\n"),Level, ManaCost, Cooldown, NumFireBalls, ScaledDamage);
+}
+
+TArray<AAuraFireBall*> UAuraFireBlast::SpawnFireBalls()
+{
+	TArray<AAuraFireBall*> FireBalls;
+	const FVector Forward = GetAvatarActorFromActorInfo()->GetActorForwardVector();
+	const FVector Location = GetAvatarActorFromActorInfo()->GetActorLocation();
+	TArray<FRotator> Rotators = UAuraAbilitySystemLibrary::EvenlySpacedRotators(Forward, FVector::UpVector, 360.f, NumFireBalls);
+
+	for(const FRotator& Rotator : Rotators)
+	{
+		FTransform SpawnTransform;
+		SpawnTransform.SetLocation(Location);
+		SpawnTransform.SetRotation(Rotator.Quaternion());
+		
+		AAuraFireBall* FireBall = GetWorld()->SpawnActorDeferred<AAuraFireBall>(
+			FireBallClass,
+			SpawnTransform,
+			GetOwningActorFromActorInfo(),
+			CurrentActorInfo->PlayerController->GetPawn(),
+			ESpawnActorCollisionHandlingMethod::AlwaysSpawn
+			);
+
+		FireBall->DamageEffectParams = MakeDamageEffectParamsFromClassDefaults();
+
+		FireBalls.Add(FireBall);
+		
+		FireBall->FinishSpawning(SpawnTransform);
+	}
+	
+	return FireBalls;
 }
