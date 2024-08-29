@@ -72,6 +72,7 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
                                       UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if(!IsValidOverlap(OtherActor)) return;
+	if(!bHit) OnHit();
 
 	if (HasAuthority())
 	{
